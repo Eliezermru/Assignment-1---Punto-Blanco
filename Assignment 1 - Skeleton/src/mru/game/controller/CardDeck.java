@@ -2,6 +2,7 @@ package mru.game.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import mru.game.view.*;
 
 /**
  * This class represents a card deck
@@ -47,6 +48,25 @@ public class CardDeck {
 	 */
 	private void shuffleDeck() {
 		Collections.shuffle(deck); 
+	}
+	
+	
+	public Card drawCard() { // draws, or removes and returns, the top card from the deck
+		if (deck.isEmpty()) { // if the deck is empty, shows a message and resets/ shuffles deck
+			AppMenu.emptyDeck(); // print message to user
+			resetDeck(); // reset and shuffle deck
+		}
+		return deck.remove(0); // return the top card, index 0
+		}
+	
+	public int getRemainingCards() {
+		return deck.size();
+	}
+	
+	public void resetDeck() { // empties the current deck, then creates a new deck and shuffles it 
+		deck.clear();
+		createDeck();
+		shuffleDeck();
 	}
 
 	/**
