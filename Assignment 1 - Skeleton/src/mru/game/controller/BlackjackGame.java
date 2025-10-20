@@ -56,16 +56,17 @@ public class BlackjackGame {
 			dealCardsProperly();
 
 			// Check for naturals (blackjack)
-			//boolean playerBlackjack = isNatural(playerHand);
-			//boolean dealerBlackjack = isNatural(dealerHand);
+			boolean playerBlackjack = isNatural(playerHand);
+			boolean dealerBlackjack = isNatural(dealerHand);
 
 			// Show initial state with dealer's second card hidden
 			displayGameState(false);
 
-			//if (playerBlackjack || dealerBlackjack) {
-				//resolveNaturals(playerBlackjack, dealerBlackjack);
-			//} else {
-				// Player's turn
+			
+			if (playerBlackjack || dealerBlackjack) {
+				resolveNaturals(playerBlackjack, dealerBlackjack);
+			} else {
+				//Player's turn
 				playerTurn();
 
 				// Dealer's turn only if player didn't bust
@@ -75,23 +76,47 @@ public class BlackjackGame {
 
 				// Determine winner and update balance
 				determineWinner();
+				break;
 			}
 
 			// Display updated balance
 			System.out.println("Updated balance: $" + currentPlayer.getBalance());
 
+			playAgain = askToPlayAgain();
+			
 			// Ask if player wants to play again
-			if (currentPlayer.getBalance() >= 2) {
-				playAgain = askToPlayAgain();
-			} else {
+			if (currentPlayer.getBalance() >= 2 && playAgain) {
 				System.out.println("Insufficient funds to continue playing.");
 				playAgain = false;
-			}
+			} 
 
 			// Clear hands for next round
 			playerHand.clear();
 			dealerHand.clear();
 		}
+	}
+	private void resolveNaturals(boolean playerBlackjack, boolean dealerBlackjack) {
+		{
+		    displayGameState(true); // Reveal dealer’s hidden card
+
+		    if (playerBlackjack && dealerBlackjack) {
+		        System.out.println("\nBoth have Blackjack! It's a tie.");
+		        // No change in balance
+		    } else if (playerBlackjack) {
+		        double winnings = currentBet * 2;
+		        System.out.println("\nBlackjack! You win $" + winnings);
+		        currentPlayer.setBalance(currentPlayer.getBalance() + winnings);
+		        currentPlayer.setNumOfWins(currentPlayer.getNumOfWins() + 1);
+		    } else if (dealerBlackjack) {
+		        System.out.println("\nDealer has Blackjack! You lose $" + currentBet + ".");
+		        currentPlayer.setBalance(currentPlayer.getBalance() - currentBet);
+		    }
+		}
+	}
+
+	private boolean isNatural(ArrayList<Card> hand) {
+		return calculateHandValue(hand) == 21 && hand.size() == 2;	}
+
 	//}
 
 	/**
@@ -207,8 +232,8 @@ public class BlackjackGame {
 			if (dealerValue >= 17) {
 				// Special case: soft 17 where Ace as 11 gives exactly 17
 				if (dealerValue == 17 && isSoft) {
-					//int softValue = calculateSoftHandValue(dealerHand);
-					//if (softValue == 17) {
+					int softValue = calculateHandValue(dealerHand);
+					if (softValue == 17) {
 						System.out.println("Dealer has soft 17 and must stand.");
 						break;
 					}
@@ -226,11 +251,14 @@ public class BlackjackGame {
 			// Check if dealer busted
 			if (calculateHandValue(dealerHand) > 21) {
 				System.out.println("Dealer busts!");
-				//break;
+				break;
 			}
+			
+		break;
 		}
-	//}
+	}
 
+	
 	private int calculateHandValue(ArrayList<Card> hand) {
 		int value = 0;
 		int aces = 0;
@@ -317,11 +345,15 @@ public class BlackjackGame {
 	 * @param showDealerCard Whether to show dealer's hidden card
 	 */
 	private void displayGameState(boolean showDealerCard) {
+		
+		String player = "PLAYER";
+		String dealer = "DEALER";
+		
 		System.out.println("\n-- BLACKJACK --");
-		System.out.println("+-------------------+-------------------+");
-		System.out.println("| PLAYER            | DEALER            |");
-		System.out.println("+-------------------+-------------------+");
-
+		System.out.printf("+%s+%s+\n", "=".repeat(23), "=".repeat(23));
+		System.out.printf("||%-23s|%-23s||\n", player, dealer);
+		System.out.printf("+%s+%s+\n", "=".repeat(23), "=".repeat(23));
+	
 		int maxRows = Math.max(playerHand.size(), dealerHand.size());
 
 		for (int i = 0; i < maxRows; i++) {
