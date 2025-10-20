@@ -1,14 +1,12 @@
 package mru.game.controller;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import mru.game.view.*;
-
 /**
- * This class represents a card deck
- * @author ksalmani
- * @version 1.0
- */
+* This class represents a card deck
+* @author ksalmani
+* @version 1.0
+*/
 public class CardDeck {
 	
 	/**
@@ -24,7 +22,6 @@ public class CardDeck {
 		createDeck();
 		shuffleDeck();
 	}
-
 	/**
 	 * This method creates the deck
 	 */
@@ -42,12 +39,11 @@ public class CardDeck {
 		}
 		
 	}
-
 	/**
 	 * this method shuffle the deck after creating a new deck
 	 */
 	private void shuffleDeck() {
-		Collections.shuffle(deck); 
+		Collections.shuffle(deck);
 	}
 	
 	
@@ -63,12 +59,11 @@ public class CardDeck {
 		return deck.size();
 	}
 	
-	public void resetDeck() { // empties the current deck, then creates a new deck and shuffles it 
+	public void resetDeck() { // empties the current deck, then creates a new deck and shuffles it
 		deck.clear();
 		createDeck();
 		shuffleDeck();
 	}
-
 	/**
 	 * The deck getter method
 	 * @return the deck
