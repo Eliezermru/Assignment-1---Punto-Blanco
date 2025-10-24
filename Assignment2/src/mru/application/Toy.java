@@ -15,5 +15,8 @@ public abstract class Toy {
 		this.name = name;
 	}
 	
+	public Toy() {
+		
+	}
 	
 }
